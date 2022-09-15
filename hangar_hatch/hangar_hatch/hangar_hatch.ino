@@ -1,6 +1,9 @@
 #include <Servo.h>
 
 #define PIN_SERVO 5
+#define PIN_LED_OPEN 2
+#define PIN_LED_CLOSE 1
+
 #define ANGLE_OPEN 180
 #define ANGLE_CLOSE 90
 
@@ -16,16 +19,25 @@ int getTimeDelay() {
 }
 
 void setup() {
+  pinMode(PIN_LED_OPEN, OUTPUT);
+  pinMode(PIN_LED_CLOSE, OUTPUT);
+  
   openDelay = getTimeDelay();
   myservo.attach(PIN_SERVO);  // attaches the servo on pin 9 to the servo object
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  digitalWrite(PIN_LED_CLOSE, LOW);
+  digitalWrite(PIN_LED_OPEN, HIGH);
+  
   myservo.write(ANGLE_OPEN); // open hatch
   delay(openDelay);
+
+  digitalWrite(PIN_LED_CLOSE, HIGH);
+  digitalWrite(PIN_LED_OPEN, LOW);
   
   myservo.write(ANGLE_CLOSE); // close hatch
   delay(closeDelay);
+
   closeDelay = getTimeDelay();
 }
