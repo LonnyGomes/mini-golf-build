@@ -30,15 +30,15 @@ void setup() {
 void loop() {
   colorWipe(strip.Color(0, 255,   0), 20); // Green
   
-  // Rotate CW slowly at 5 RPM
-  myStepper.setSpeed(stepperSpeed);
-  myStepper.step(stepsPerRevolution * rotations);
-  delay(1000);
-  
-  // Rotate CCW quickly at 10 RPM
-  myStepper.setSpeed(stepperSpeed);
-  myStepper.step(-stepsPerRevolution * rotations);
-  delay(1000);
+//  // Rotate CW slowly at 5 RPM
+//  myStepper.setSpeed(stepperSpeed);
+//  myStepper.step(stepsPerRevolution * rotations);
+//  delay(1000);
+//  
+//  // Rotate CCW quickly at 10 RPM
+//  myStepper.setSpeed(stepperSpeed);
+//  myStepper.step(-stepsPerRevolution * rotations);
+//  delay(1000);
 }
 
 void colorWipe(uint32_t color, int wait) {
@@ -49,6 +49,12 @@ void colorWipe(uint32_t color, int wait) {
     if ((i - LED_TRAIL_LEN) >= 0) {
        strip.setPixelColor(i - LED_TRAIL_LEN, 0); 
     }
+    strip.show();                          //  Update strip to match
+    delay(wait);                           //  Pause for a moment
+  }
+
+  for(int idx = strip.numPixels() - LED_TRAIL_LEN; idx < strip.numPixels() + LED_TRAIL_LEN; idx +=1) {
+    strip.setPixelColor(idx, 0); 
     strip.show();                          //  Update strip to match
     delay(wait);                           //  Pause for a moment
   }
