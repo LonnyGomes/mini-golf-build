@@ -1,5 +1,3 @@
-//Includes the Arduino Stepper Library
-#include <Stepper.h>
 #include <Adafruit_NeoPixel.h>
 #include <AccelStepper.h>
 
@@ -30,10 +28,8 @@ unsigned long lastPixelDelayTime = 0;
 
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRBW + NEO_KHZ800);
 
-// Creates an instance of stepper class
+// Creates an instance of AccelStepper class
 // Pins entered in sequence IN1-IN3-IN2-IN4 for proper step sequence
-Stepper myStepper = Stepper(stepsPerRevolution, 8, 10, 9, 11);
-
 AccelStepper stepper(AccelStepper::FULL4WIRE, MOTOR_PIN_1, MOTOR_PIN_3, MOTOR_PIN_2, MOTOR_PIN_4);
 
 void setup() {
@@ -50,18 +46,6 @@ void setup() {
 }
 
 void loop() {
-
-
-//  // Rotate CW slowly at 5 RPM
-//  myStepper.setSpeed(stepperSpeed);
-//  myStepper.step(stepsPerRevolution * rotations);
-//  delay(1000);
-//  
-//  // Rotate CCW quickly at 10 RPM
-//  myStepper.setSpeed(stepperSpeed);
-//  myStepper.step(-stepsPerRevolution * rotations);
-//  delay(1000);
-
   if (stepper.distanceToGo() == 0) {
     stepper.stop();
     stepper.moveTo(-stepper.currentPosition());
@@ -70,8 +54,7 @@ void loop() {
   }
   stepper.runSpeedToPosition();
 
-
-  //colorWipe(strip.Color(0, 255,   0), 20); // Green
+  // update neo pixel strip if delay time has been met
   if (millis() - lastPixelDelayTime >= LED_DELAY) {
     lastPixelDelayTime = millis();
     updatePixelStrip();
@@ -87,23 +70,4 @@ void updatePixelStrip() {
   }
   strip.show();                          //  Update strip to match
   curPixelIdx = (curPixelIdx + 1 == strip.numPixels()) ? 0 : curPixelIdx + 1;
-}
-
-void colorWipe(uint32_t color, int wait) {
-  
-  for(int i=0; i<strip.numPixels(); i++) { // For each pixel in strip...
-    strip.setPixelColor(i, color);         //  Set pixel's color (in RAM)  
- 
-    if ((i - LED_TRAIL_LEN) >= 0) {
-       strip.setPixelColor(i - LED_TRAIL_LEN, 0); 
-    }
-    strip.show();                          //  Update strip to match
-    //delay(wait);                           //  Pause for a moment
-  }
-
-  for(int idx = strip.numPixels() - LED_TRAIL_LEN; idx < strip.numPixels() + LED_TRAIL_LEN; idx +=1) {
-    strip.setPixelColor(idx, 0); 
-    strip.show();                          //  Update strip to match
-    //delay(wait);                           //  Pause for a moment
-  }
 }
